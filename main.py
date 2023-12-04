@@ -1,5 +1,6 @@
 from flask import Flask, render_template, url_for
 from flask_bootstrap import Bootstrap
+from flask_login import LoginManager
 
 from dotenv import load_dotenv
 import os
@@ -11,7 +12,8 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
 Bootstrap(app)
+login_manager = LoginManager()
 
 @app.route("/")
 def home():
-  return render_template("index.html", page="home", title="Welcome",subtitle="please log a walk", image_url=url_for('static', filename='images/treadmill.jpg'))
+  return render_template("index.html", page="home", title="Welcome",subtitle="please log a walk")
