@@ -48,18 +48,14 @@ def home():
   all_logs = db_handler.get_all_logs()
   daily_logs = get_daily_logs(all_logs)
   total_distance = get_total_distance(all_logs)
-  title = request.args.get("new_title", "")
-  if not title:
-    if not current_user.is_authenticated:
-      title = "Welcome"
-    else:
-      title = f"You Walked {total_distance}km"
-  subtitle = request.args.get("new_subtitle", "")
-  if not subtitle:
-    if not current_user.is_authenticated:
-      subtitle = "please log in"
-    else:
-      subtitle = "keep up the good work"
+  if not current_user.is_authenticated:
+    title = "Welcome"
+  else:
+    title = f"You Walked {total_distance}km"
+  if not current_user.is_authenticated:
+    subtitle = "please log in"
+  else:
+    subtitle = "keep up the good work"
   return render_template("index.html", page="home", title=title,subtitle=subtitle, total_distance=total_distance, logged_in=current_user.is_authenticated, daily_logs=daily_logs)
 
 @app.route("/login", methods=["GET", "POST"])
@@ -80,14 +76,14 @@ def login():
       return redirect(url_for("login", new_title="Wrong Password", new_subtitle="please try again"))
     user = User(1, "DSchwachhofer")
     login_user(user)
-    return redirect(url_for("home", new_title="Log In Successful", new_subtitle="welcome back"))
+    return redirect(url_for("home"))
     
   return render_template("login.html", page="login", title=title, subtitle=subtitle, form=form, logged_in=current_user.is_authenticated)
 
 @app.route("/logout")
 def logout():
   logout_user()
-  return redirect(url_for("home", new_title="Successfully logged out", new_subtitle="good bye"))
+  return redirect(url_for("home"))
 
 @app.route("/logwalk", methods=["GET", "POST"])
 def logwalk():
@@ -95,7 +91,7 @@ def logwalk():
   if form.validate_on_submit():
     print(form.data)
     db_handler.create_new_log(form.data)
-    return redirect(url_for("home", new_title="Success", new_subtitle="walk successfully logged"))
+    return redirect(url_for("home"))
 
   return render_template("logwalk.html", page="logwalk", title="Congratulations!", subtitle="please log your walk", form=form, cancel_url="home", logged_in=current_user.is_authenticated)
 
