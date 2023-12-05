@@ -20,7 +20,16 @@
       {% endfor %}
     </tbody>
   </table>
-  <button type="button" class="btn btn-primary">Edit Logs</button>
+  <div>
+    <a href="{{url_for('logwalk')}}"><button class="btn btn-primary m-1">Add New Log</button></a>
+    <a href="{{url_for('edit_logs')}}"><button class="btn btn-secondary m-1">Edit Your Logs</button></a>
+  </div>
+  {# <form action="/logwalk" method="get" class="d-inline-flex me-2">
+    <button type="submit" class="btn btn-primary">Add New Log</button>
+  </form>
+  <form action="/editlogs" method="get" class="d-inline-flex">
+    <button type="submit" class="btn btn-secondary">Edit Your Logs</button>
+  </form> #}
 </div>
 
 {% include "footer.html" %}

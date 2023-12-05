@@ -23,3 +23,19 @@ class Db_Handler():
   def get_all_logs(self):
     logs = WalkLog.query.all()
     return logs
+  
+  def get_log_from_id(self, id):
+    log = WalkLog.query.get(id)
+    return log
+  
+  def edit_log(self, data, log_id):
+    log = self.get_log_from_id(log_id)
+    log.date = data["date"]
+    log.distance = float(data["distance"])
+    log.time = int(data["time"])
+    db.session.commit()
+
+  def delete_log(self, log_id):
+    log = self.get_log_from_id(log_id)
+    db.session.delete(log)
+    db.session.commit()

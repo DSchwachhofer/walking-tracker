@@ -4,9 +4,9 @@ from flask_login import LoginManager, login_user, logout_user, UserMixin, curren
 
 from scripts.forms import LoginForm, LogWalkForm
 from scripts.db_handler import db, Db_Handler
-from scripts.utility import get_daily_logs
+from scripts.utility import get_daily_logs, reverse_all_logs
 
-from datetime import date
+from datetime import date, datetime
 from dotenv import load_dotenv
 import os
 
@@ -43,14 +43,17 @@ def load_user(user_id):
 def inject_current_year():
   return {"current_year": date.today().year}
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def home():
   title = request.args.get("new_title", "")
   if not title:
     title = "Welcome"
   subtitle = request.args.get("new_subtitle", "")
   if not subtitle:
-    subtitle = "please log in"
+    if not current_user.is_authenticated:
+      subtitle = "please log in"
+    else:
+      subtitle = "make a new log or view existing logs"
   all_logs = db_handler.get_all_logs()
   daily_logs = get_daily_logs(all_logs)
   return render_template("index.html", page="home", title=title,subtitle=subtitle, logged_in=current_user.is_authenticated, daily_logs=daily_logs)
@@ -91,3 +94,40 @@ def logwalk():
     return redirect(url_for("home", new_title="Success", new_subtitle="walk successfully logged"))
 
   return render_template("logwalk.html", page="logwalk", title="Congratulations!", subtitle="please log your walk", form=form,logged_in=current_user.is_authenticated)
+
+@app.route("/editlogs")
+def edit_logs():
+  title = request.args.get("new_title", "")
+  if not title:
+    title = "Made A Mistake?"
+  subtitle = request.args.get("new_subtitle", "")
+  if not subtitle:
+    subtitle = "edit or remove your logs"
+
+  all_logs = db_handler.get_all_logs()
+  logs_reversed = reverse_all_logs(all_logs)
+
+  return render_template("editlogs.html", title=title, subtitle=subtitle, all_logs=logs_reversed, logged_in=current_user.is_authenticated)
+
+@app.route("/editlog/<log_id>", methods=["GET", "POST"])
+def edit_log(log_id):
+  log = db_handler.get_log_from_id(log_id)
+  form = LogWalkForm()
+  if form.validate_on_submit():
+    with app.app_context():
+      db_handler.edit_log(form.data, log_id)
+    return redirect(url_for("edit_logs", new_title="Success", new_subtitle=f"post from {log.date} successfully edited."))    
+
+  form.date.data = datetime.strptime(log.date, "%Y-%m-%d").date()
+  form.distance.data = log.distance
+  form.time.data = log.time
+  form.submit.label.text = "Save Edit"
+
+  return render_template("logwalk.html", title="Edit Log", subtitle=f"from {log.date}", form=form, logged_in=current_user.is_authenticated)
+
+@app.route("/deletelog/<log_id>")
+def delete_log(log_id):
+  log = db_handler.get_log_from_id(log_id)
+  with app.app_context():
+    db_handler.delete_log(log_id)
+  return redirect(url_for("edit_logs", new_title="Success", new_subtitle=f"post from {log.date} successfully deleted."))

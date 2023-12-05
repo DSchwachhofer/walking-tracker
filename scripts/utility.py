@@ -26,5 +26,33 @@ def get_daily_logs(all_logs):
 
   return with_avarage_speed[:10]
 
+def reverse_all_logs(all_logs):
+  log_list = []
+  for log in all_logs:
+    log_object = {
+      "id": log.id,
+      "date": log.date,
+      "distance": log.distance,
+      "duration": log.time,
+    }
+    log_list.append(log_object)
+  log_list.reverse()
+  return log_list
+
+# not used at the moment
 def sort_logs_by_date(all_logs):
-  print(all_logs)
+  unsorted_log_list = []
+  for log in all_logs:
+    log_object = {
+      "id": log.id,
+      "date": log.date,
+      "distance": log.distance,
+      "duration": log.time,
+    }
+    unsorted_log_list.append(log_object)
+  
+  sorted_by_date = sorted(unsorted_log_list, key=lambda x: x["date"], reverse=True)
+
+  print(sorted_by_date)
+
+  return sorted_by_date
