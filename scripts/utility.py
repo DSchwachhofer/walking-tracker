@@ -1,5 +1,4 @@
 def get_daily_logs(all_logs):
-  print(all_logs)
   summarized_log_list = []
   for log in all_logs:
     log_object = {
@@ -7,7 +6,6 @@ def get_daily_logs(all_logs):
       "distance": log.distance,
       "duration": log.time,
     }
-    print(log_object)
     if len(summarized_log_list) == 0:
       summarized_log_list.append(log_object)
     else:

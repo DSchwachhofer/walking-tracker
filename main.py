@@ -45,18 +45,21 @@ def inject_current_year():
 
 @app.route("/", methods=["GET", "POST"])
 def home():
+  all_logs = db_handler.get_all_logs()
+  daily_logs = get_daily_logs(all_logs)
+  total_distance = get_total_distance(all_logs)
   title = request.args.get("new_title", "")
   if not title:
-    title = "Welcome"
+    if not current_user.is_authenticated:
+      title = "Welcome"
+    else:
+      title = f"You Walked {total_distance}km"
   subtitle = request.args.get("new_subtitle", "")
   if not subtitle:
     if not current_user.is_authenticated:
       subtitle = "please log in"
     else:
-      subtitle = "make a new log or view existing logs"
-  all_logs = db_handler.get_all_logs()
-  daily_logs = get_daily_logs(all_logs)
-  total_distance = get_total_distance(all_logs)
+      subtitle = "keep up the good work"
   return render_template("index.html", page="home", title=title,subtitle=subtitle, total_distance=total_distance, logged_in=current_user.is_authenticated, daily_logs=daily_logs)
 
 @app.route("/login", methods=["GET", "POST"])
@@ -132,3 +135,6 @@ def delete_log(log_id):
   with app.app_context():
     db_handler.delete_log(log_id)
   return redirect(url_for("edit_logs", new_title="Success", new_subtitle=f"post from {log.date} successfully deleted."))
+
+if __name__ == "__main__":
+  app.run()
