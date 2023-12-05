@@ -26,17 +26,21 @@
                 <a class="nav-link {%if page == 'home'%} active" aria-current="page{% endif %}"
                   href="{{url_for('home')}}">Home</a>
               </li>
+              {% if not logged_in %}
               <li class="nav-item m-1">
                 <a class="nav-link {%if page == 'login'%} active" aria-current="page{% endif %}"
-                  href="{{url_for('home')}}">Log In</a>
+                  href="{{url_for('login')}}">Log In</a>
+              </li>
+              {% endif %}
+              {% if logged_in %}
+              <li class="nav-item m-1">
+                <a class="nav-link {%if page == 'logwalk'%} active" aria-current="page{% endif %}" href="{{url_for('logwalk')}}">Log
+                  Walk</a>
               </li>
               <li class="nav-item m-1">
-                <a class="nav-link {%if page == 'new_post'%} active" aria-current="page{% endif %}"
-                  href="{{url_for('home')}}">Log Walk</a>
+                <a class="nav-link" href="{{url_for('logout')}}">Log Out</a>
               </li>
-              <li class="nav-item m-1">
-                <a class="nav-link" href="{{url_for('home')}}">Log Out</a>
-              </li>
+              {% endif %}
               <li class="nav-item m-1">
                 <a class="nav-link{%if page == 'about'%} active" aria-current="page{% endif %}"
                   href="{{url_for('home')}}">About</a>

@@ -1,0 +1,22 @@
+{% include "header.html" %}
+<h3>Log Your Walk</h3>
+<hr>
+<form method="Post">
+  {{form.hidden_tag()}}
+  <div class="mb-3">
+    {{ form.date.label(class="form.label") }}
+    {{ form.date(class="form-control") }}
+  </div>
+  <div class="mb-3">
+    {{ form.distance.label(class="form.label") }}
+    {{ form.distance(class="form-control") }}
+  </div>
+  <div class="mb-3">
+    {{ form.time.label(class="form.label") }}
+    {{ form.time(class="form-control") }}
+  </div>
+  <div class="mb-3">
+    {{ form.submit(class="btn btn-secondary") }}
+  </div>
+</form>
+{% include "footer.html" %}
