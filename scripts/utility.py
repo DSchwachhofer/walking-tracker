@@ -39,20 +39,10 @@ def reverse_all_logs(all_logs):
   log_list.reverse()
   return log_list
 
-# not used at the moment
-def sort_logs_by_date(all_logs):
-  unsorted_log_list = []
+
+def get_total_distance(all_logs):
+  total_distance = 0
   for log in all_logs:
-    log_object = {
-      "id": log.id,
-      "date": log.date,
-      "distance": log.distance,
-      "duration": log.time,
-    }
-    unsorted_log_list.append(log_object)
-  
-  sorted_by_date = sorted(unsorted_log_list, key=lambda x: x["date"], reverse=True)
+    total_distance = total_distance + log.distance
 
-  print(sorted_by_date)
-
-  return sorted_by_date
+  return total_distance

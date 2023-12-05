@@ -1,7 +1,9 @@
 {% include "header.html" %}
 
+{% if logged_in %}
 <div class="position-relative">
   <h3>All Logs:</h3>
+  <hr>
   <table class="table">
     <thead>
       <th>Date</th>
@@ -38,7 +40,10 @@
       {% endfor %}
     </tbody>
   </table>
-  <!-- <button type="button" class="btn btn-primary">Edit Logs</button> -->
+  <a href="{{url_for('home')}}">
+    <button type="button" class="btn btn-secondary">Show Daily</button>
+  </a>
 </div>
+{% endif %}
 
 {% include "footer.html" %}

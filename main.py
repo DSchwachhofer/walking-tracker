@@ -4,7 +4,7 @@ from flask_login import LoginManager, login_user, logout_user, UserMixin, curren
 
 from scripts.forms import LoginForm, LogWalkForm
 from scripts.db_handler import db, Db_Handler
-from scripts.utility import get_daily_logs, reverse_all_logs
+from scripts.utility import get_daily_logs, reverse_all_logs, get_total_distance
 
 from datetime import date, datetime
 from dotenv import load_dotenv
@@ -56,7 +56,8 @@ def home():
       subtitle = "make a new log or view existing logs"
   all_logs = db_handler.get_all_logs()
   daily_logs = get_daily_logs(all_logs)
-  return render_template("index.html", page="home", title=title,subtitle=subtitle, logged_in=current_user.is_authenticated, daily_logs=daily_logs)
+  total_distance = get_total_distance(all_logs)
+  return render_template("index.html", page="home", title=title,subtitle=subtitle, total_distance=total_distance, logged_in=current_user.is_authenticated, daily_logs=daily_logs)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -93,7 +94,7 @@ def logwalk():
     db_handler.create_new_log(form.data)
     return redirect(url_for("home", new_title="Success", new_subtitle="walk successfully logged"))
 
-  return render_template("logwalk.html", page="logwalk", title="Congratulations!", subtitle="please log your walk", form=form,logged_in=current_user.is_authenticated)
+  return render_template("logwalk.html", page="logwalk", title="Congratulations!", subtitle="please log your walk", form=form, cancel_url="home", logged_in=current_user.is_authenticated)
 
 @app.route("/editlogs")
 def edit_logs():
@@ -107,7 +108,7 @@ def edit_logs():
   all_logs = db_handler.get_all_logs()
   logs_reversed = reverse_all_logs(all_logs)
 
-  return render_template("editlogs.html", title=title, subtitle=subtitle, all_logs=logs_reversed, logged_in=current_user.is_authenticated)
+  return render_template("editlogs.html", title=title, subtitle=subtitle, page="editlogs", all_logs=logs_reversed, logged_in=current_user.is_authenticated)
 
 @app.route("/editlog/<log_id>", methods=["GET", "POST"])
 def edit_log(log_id):
@@ -123,7 +124,7 @@ def edit_log(log_id):
   form.time.data = log.time
   form.submit.label.text = "Save Edit"
 
-  return render_template("logwalk.html", title="Edit Log", subtitle=f"from {log.date}", form=form, logged_in=current_user.is_authenticated)
+  return render_template("logwalk.html", title="Edit Log", subtitle=f"from {log.date}", form=form, cancel_url="edit_logs", logged_in=current_user.is_authenticated)
 
 @app.route("/deletelog/<log_id>")
 def delete_log(log_id):

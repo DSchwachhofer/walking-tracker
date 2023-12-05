@@ -22,11 +22,11 @@
           </button>
           <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
             <ul class="navbar-nav">
+              {% if not logged_in %}
               <li class="nav-item m-1">
                 <a class="nav-link {%if page == 'home'%} active" aria-current="page{% endif %}"
                   href="{{url_for('home')}}">Home</a>
               </li>
-              {% if not logged_in %}
               <li class="nav-item m-1">
                 <a class="nav-link {%if page == 'login'%} active" aria-current="page{% endif %}"
                   href="{{url_for('login')}}">Log In</a>
@@ -34,21 +34,26 @@
               {% endif %}
               {% if logged_in %}
               <li class="nav-item m-1">
-                <a class="nav-link {%if page == 'logwalk'%} active" aria-current="page{% endif %}" href="{{url_for('logwalk')}}">Log
-                  Walk</a>
+                <a class="nav-link {%if page == 'home'%} active" aria-current="page{% endif %}" href="{{url_for('home')}}">Show
+                  Daily</a>
+                </li>
+                <li class="nav-item m-1">
+                  <a class="nav-link {%if page == 'logwalk'%} active" aria-current="page{% endif %}" href="{{url_for('logwalk')}}">Add
+                    New</a>
+                </li>
+                <li class="nav-item m-1">
+                  <a class="nav-link {%if page == 'editlogs'%} active" aria-current="page{% endif %}"
+                    href="{{url_for('edit_logs')}}">Edit
+                    Logs</a>
               </li>
               <li class="nav-item m-1">
                 <a class="nav-link" href="{{url_for('logout')}}">Log Out</a>
               </li>
               {% endif %}
-              <li class="nav-item m-1">
+              <!-- <li class="nav-item m-1">
                 <a class="nav-link{%if page == 'about'%} active" aria-current="page{% endif %}"
                   href="{{url_for('home')}}">About</a>
-              </li>
-              <li class="nav-item m-1">
-                <a class="nav-link {%if page == 'contact'%} active" aria-current="page{% endif %}"
-                  href="{{url_for('home')}}">Contact</a>
-              </li>
+              </li> -->
             </ul>
           </div>
         </div>

@@ -1,4 +1,5 @@
 {% include "header.html" %}
+{% if logged_in %}
 <h3>Log Your Walk</h3>
 <hr>
 <form method="Post">
@@ -16,7 +17,10 @@
     {{ form.time(class="form-control") }}
   </div>
   <div class="mb-3">
-    {{ form.submit(class="btn btn-secondary") }}
+    {{ form.submit(class="btn btn-primary") }}
+    <a href="{{url_for(cancel_url)}}"><button type="button" class="btn btn-secondary m-1">Cancel</button></a>
   </div>
 </form>
+{% endif %}
+
 {% include "footer.html" %}
