@@ -47,7 +47,7 @@ def inject_current_year():
 def home():
   all_logs = db_handler.get_all_logs()
   daily_logs = get_daily_logs(all_logs)
-  total_distance = get_total_distance(all_logs)
+  total_distance = round(get_total_distance(all_logs), 2)
   if not current_user.is_authenticated:
     title = "Welcome"
   else:
